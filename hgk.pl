@@ -195,12 +195,12 @@ Usage: perl $0 [Options] KEYWORD.txt
 Options:
     --version       Show version.
     --help          Show this message.
-    -t              Trivial. Use this switch for trivial edit (i.e. typo).
-    -d              Debug. Use this switch for verbose log.
+    -d, --debug     Debug. Use this switch for verbose log.
     -u username     Username. Specify username.
     -p password     Password. Specify password.
+    -g groupname    Groupname. Specify groupname for keyword.
     -c, --cookie    Cookie. Skip login/logout if $cookie_file exists.
-    -g groupname    Groupname. Specify groupname.
+
 EOD
     exit(0);
 }
