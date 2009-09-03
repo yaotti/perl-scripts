@@ -47,15 +47,6 @@ if ($@) {
 
 sub bootstrap {
     my ($file) = @_;
-    $option_ok = GetOptions(
-        'group=s'    => \$groupname,
-        'user=s'     => \$username,
-        'password=s' => \$password,
-        'debug'      => \$debug,
-        'cookie'     => \$cookie,
-        'help'       => \&HELP_MESSAGE,
-        'version'    => \&VERSION_MESSAGE,
-    );
     unless ( defined $groupname ) {
         print 'Group name: ';
         chomp( $groupname = <STDIN> );
@@ -63,7 +54,7 @@ sub bootstrap {
     $keyword_url = sprintf 'http://%s.g.hatena.ne.jp/keyword', $groupname;
 
     $filename = basename($file);
-    $filename =~ /(.*).txt/ or die 'input file must be a txt one';
+    $filename =~ /(.*).txt/ or die "input file must be a txt one: $filename";
     $keyword = $1;
     1;
 }
@@ -214,6 +205,15 @@ EOD
 }
 
 sub main {
+    $option_ok = GetOptions(
+        'group=s'    => \$groupname,
+        'user=s'     => \$username,
+        'password=s' => \$password,
+        'debug'      => \$debug,
+        'cookie'     => \$cookie,
+        'help'       => \&HELP_MESSAGE,
+        'version'    => \&VERSION_MESSAGE,
+    );
     bootstrap(@ARGV);
     login;
     update_group_keyword;
