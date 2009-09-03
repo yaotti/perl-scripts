@@ -66,6 +66,7 @@ sub login {
         print 'Username: ';
         chomp( $username = <STDIN> );
     }
+
     unless ( defined $password ) {
         print 'Password: ';
         chomp( $password = <STDIN> );
@@ -131,9 +132,8 @@ sub update_group_keyword {
     if ( not $r->is_redirect ) {
         error_exit( "Post: Unexpected response: ", $r->status_line );
     }
-
     # Check the result. OK if the location ends with the date.
-    if ( $r->header("Location") =~ m(/$keyword$/) ) {
+    if ( $r->header("Location") =~ m{$keyword} ) {
         say_debug("post_it: returns 1 (OK).");
         return 1;
     } else {
