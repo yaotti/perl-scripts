@@ -42,10 +42,8 @@ my $web      = scraper {
     process '//textarea[@name="body"]',
       body => 'TEXT',
 };
-my $escape_chars = '\\\*\?\|"<>:,;% ';
 
 for my $keyword (@$keywords) {
-    $keyword =~ s/([$escape_chars])/\\$1/g;
     my $keyword_url = $hatena_group_url . "/keyword/" . $keyword . "?mode=edit";
     $mech->get($keyword_url);
     $response = $web->scrape( $mech->content, $keyword_url );
