@@ -1,8 +1,11 @@
 My Perl Scripts
 
 hgk.pl - Hatena Group Keyword Writer
-  How to use: hgk.pl --help
   
 keyword-extract.pl - Extract hatena group keywords for hgk.pl
   How to use: keyword-extract.pl GROUPNAME
   Requirement: pit
+
+things.pl - CUI for Things.app
+  Things is a task management application for Mac
+  http://culturedcode.com/things/

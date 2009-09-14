@@ -1,0 +1,86 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use XML::LibXML;
+use Perl6::Say;
+use Getopt::Std;
+use Getopt::Long;
+use Pod::Usage;
+# use Encode;
+# use Term::Encoding qw/term_encoding/;
+# use Term::ReadLine;
+
+our $VERSION = '0.0.1';
+
+### options
+GetOptions('--version' => \my $version, '--help' => \my $help);
+pod2usage(1) if $help;
+if ($version) {
+    say 'things.pl: version ', $VERSION;
+    exit 0;
+}
+
+### procedures
+my $commands = {
+    todo => \&todos,
+#     add  => \&add_todo,
+#     comp => \&complete_todo,
+#     done => \&done_todos,
+};
+
+my ( $command, $args ) = @ARGV;
+$command ||= 'todo';
+$command = $commands->{$command};
+$command->($args);
+
+sub get_data {
+    chomp(my $user = `whoami`);
+    my $datafile =
+      '/Users/'.$user.'/Library/Application Support/Cultured Code/Things/Database.xml';
+    my $doc = XML::LibXML->new->parse_file($datafile);
+    [ $doc->getElementsByTagName('object') ]; # xpathの方がシンプルかも
+}
+
+sub todos {
+    my $elements = get_data;
+    my $todos;
+    for my $element (@$elements) {
+        next if $element->getAttribute('type') ne 'TODO';
+        my $attrs = [ $element->getChildrenByTagName('attribute') ];
+
+   # nameがdatecompletedなattributeタグを含まないものが未完了todo
+        if ( !scalar grep { $_->getAttribute('name') eq 'datecompleted' }
+            @$attrs )
+        {
+            push @$todos, $element;
+        }
+    }
+    map { say $_->textContent }
+      grep { $_->getAttribute('name') eq 'title' }
+      map { $_->getChildrenByTagName('attribute') } @$todos;
+}
+
+__END__
+
+=head1 NAME
+
+things.pl - Command Line Tool for Things.app
+
+=head1 SYNOPSIS
+
+  % things [todo]
+    display uncompleted todos' list
+
+=head1 DESCRIPTION
+
+things.pl is a command line interface for Things.app. This handle todos' data in Things from cui.
+
+Things.app is a task management application for Mac. See L<http://culturedcode.com/things/> for more details about Things.app.
+See L<http://github.com/yaotti/perl-scripts> for git repository.
+
+=head1 AUTHOR
+
+Hiroshige Umino E<lt>yaotti@gmail.comE<gt>
+
+=cut
+
