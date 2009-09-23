@@ -67,6 +67,17 @@ sub login {
         chomp( $username = <STDIN> );
     }
 
+    if ($cookie and -e($cookie_file)) {
+        say_debug("login: Loading cookie jar.");
+        $cookie_jar = HTTP::Cookies->new;
+        $cookie_jar->load($cookie_file);
+        $cookie_jar->scan(\&get_rkm);
+        say_debug("login: \$cookie_jar = " . $cookie_jar->as_string);
+        say "Skip login.";
+        return;
+    }
+
+
     unless ( defined $password ) {
         print 'Password: ';
         chomp( $password = <STDIN> );
@@ -77,6 +88,10 @@ sub login {
         mode     => 'enter',
         backurl  => $keyword_url,
     };
+    if ($cookie) {
+        $form->{persistent} = "1";
+    }
+
     say("Login to $hatena_url as $form->{name}.");
 
     my $r = $user_agent->simple_request(
