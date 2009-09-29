@@ -148,7 +148,7 @@ sub update_group_keyword {
         error_exit( "Post: Unexpected response: ", $r->status_line );
     }
     # Check the result. OK if the location ends with the date.
-    if ( $r->header("Location") =~ m{$keyword} ) {
+    if ( $r->header("Location") =~ m{\Q$keyword\E} ) {
         say_debug("post_it: returns 1 (OK).");
         return 1;
     } else {
