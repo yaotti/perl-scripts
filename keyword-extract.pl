@@ -8,8 +8,11 @@ use Config::Pit;
 use IO::File;
 use utf8;
 use Encode qw(encode);
+use Getopt::Long;
 
+GetOptions('help' => \&HELP_MESSAGE);
 my $group = $ARGV[0] or die "usage: $0 GROUPNAME";
+
 
 # ログイン処理
 my $config       = pit_get('hatena.ne.jp');
@@ -57,4 +60,15 @@ for my $keyword (@$keywords) {
     die "Can't open file $filename: $!" unless defined $fh;
     print $fh $body;
     say "$keyword.txt is successfully updated.";
+}
+
+sub HELP_MESSAGE {
+    print <<"EOD";
+
+Usage: perl $0 GROUPNAME
+
+Options:
+    --help          Show this message.
+EOD
+    exit(0);
 }
